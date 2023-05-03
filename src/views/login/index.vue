@@ -37,6 +37,7 @@ import globalization from "@/assets/svg/globalization.svg?component";
 import Lock from "@iconify-icons/ri/lock-fill";
 import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
+import login from "mock/login";
 
 defineOptions({
   name: "Login"
@@ -71,15 +72,28 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({
+          username: ruleForm.username,
+          password: ruleForm.password
+        })
         .then(res => {
-          if (res.success) {
+          if (res && res.success) {
             // 获取后端路由
             initRouter().then(() => {
               router.push("/");
               message("登录成功", { type: "success" });
             });
+          } else {
+            message("用户名或密码错误", { type: "error" });
+            loading.value = false;
+            return fields;
           }
+        })
+        .catch(err => {
+          console.log(err);
+          message("用户名或密码错误", { type: "error" });
+          loading.value = false;
+          return fields;
         });
     } else {
       loading.value = false;
@@ -155,7 +169,7 @@ watch(imgCode, value => {
     </div>
     <div class="login-container">
       <div class="img">
-        <component :is="toRaw(illustration)" />
+        <img src="../../assets/login/logo_full.png" />
       </div>
       <div class="login-box">
         <div class="login-form">
@@ -263,7 +277,7 @@ watch(imgCode, value => {
             </Motion>
           </el-form>
 
-          <Motion v-if="currentPage === 0" :delay="350">
+          <!-- <Motion v-if="currentPage === 0" :delay="350">
             <el-form-item>
               <el-divider>
                 <p class="text-gray-500 text-xs">{{ t("login.thirdLogin") }}</p>
@@ -282,13 +296,13 @@ watch(imgCode, value => {
                 </span>
               </div>
             </el-form-item>
-          </Motion>
+          </Motion> -->
           <!-- 手机号登录 -->
-          <phone v-if="currentPage === 1" />
+          <!-- <phone v-if="currentPage === 1" /> -->
           <!-- 二维码登录 -->
-          <qrCode v-if="currentPage === 2" />
+          <!-- <qrCode v-if="currentPage === 2" /> -->
           <!-- 注册 -->
-          <regist v-if="currentPage === 3" />
+          <regist v-if="currentPage === 1" />
           <!-- 忘记密码 -->
           <update v-if="currentPage === 4" />
         </div>

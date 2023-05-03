@@ -72,6 +72,9 @@ function filterChildrenTree(data: RouteComponent[]) {
 
 /** 判断两个数组彼此是否存在相同值 */
 function isOneOfArray(a: Array<string>, b: Array<string>) {
+  if (!Array.isArray(b)) {
+    b = [b];
+  }
   return Array.isArray(a) && Array.isArray(b)
     ? intersection(a, b).length > 0
       ? true

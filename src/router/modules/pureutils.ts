@@ -8,7 +8,8 @@ export default {
   meta: {
     icon: hot,
     title: "pure-admin-utils",
-    rank: utils
+    rank: utils,
+    showLink: false
   },
   children: [
     {

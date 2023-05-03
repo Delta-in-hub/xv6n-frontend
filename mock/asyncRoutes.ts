@@ -203,7 +203,8 @@ export default [
     response: () => {
       return {
         success: true,
-        data: [systemRouter, permissionRouter, frameRouter, tabsRouter]
+        data: []
+        // data: [systemRouter, permissionRouter, frameRouter, tabsRouter]
       };
     }
   }

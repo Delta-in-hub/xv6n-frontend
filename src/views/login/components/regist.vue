@@ -12,6 +12,9 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Lock from "@iconify-icons/ri/lock-fill";
 import Iphone from "@iconify-icons/ep/iphone";
 import User from "@iconify-icons/ri/user-3-fill";
+import { http } from "@/utils/http";
+import { UserResult } from "@/api/user";
+import { baseUrlApi } from "@/api/utils";
 
 const { t } = useI18n();
 const checked = ref(false);
@@ -21,7 +24,8 @@ const ruleForm = reactive({
   phone: "",
   verifyCode: "",
   password: "",
-  repeatPassword: ""
+  repeatPassword: "",
+  role: ""
 });
 const ruleFormRef = ref<FormInstance>();
 const { isDisabled, text } = useVerifyCode();
@@ -40,19 +44,43 @@ const repeatPasswordRule = [
   }
 ];
 
+const registerRequest = (data?: object) => {
+  return http.request<UserResult>("post", baseUrlApi("register"), { data });
+};
+
 const onUpdate = async (formEl: FormInstance | undefined) => {
   loading.value = true;
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
       if (checked.value) {
-        // 模拟请求，需根据实际开发进行修改
-        setTimeout(() => {
-          message(transformI18n($t("login.registerSuccess")), {
-            type: "success"
-          });
+        if (ruleForm.role === "") {
+          message(transformI18n($t("login.selectRole")), { type: "warning" });
           loading.value = false;
-        }, 2000);
+          return;
+        }
+        // 模拟请求，需根据实际开发进行修改
+        registerRequest({
+          username: ruleForm.username,
+          phone: ruleForm.phone,
+          password: ruleForm.password,
+          roles: ruleForm.role
+        }).then(res => {
+          if (res.success) {
+            message(transformI18n($t("login.registerSuccess")), {
+              type: "success"
+            });
+            loading.value = false;
+            setTimeout(() => {
+              onBack();
+            }, 2000);
+          } else {
+            message(transformI18n($t("login.registerFail")), {
+              type: "error"
+            });
+            loading.value = false;
+          }
+        });
       } else {
         loading.value = false;
         message(transformI18n($t("login.tickPrivacy")), { type: "warning" });
@@ -77,6 +105,36 @@ function onBack() {
     :rules="updateRules"
     size="large"
   >
+    <Motion>
+      <!-- 选择择注册管理员用户，或者学生用户 ，默认是学生账户-->
+      <el-form-item
+        :rules="[
+          {
+            required: true,
+            message: transformI18n($t('login.selectRole')),
+            trigger: 'blur'
+          }
+        ]"
+        prop="role"
+      >
+        <el-select
+          v-model="ruleForm.role"
+          placeholder="请选择"
+          :prefix-icon="useRenderIcon(User)"
+        >
+          <el-option
+            v-for="item in [
+              { label: transformI18n($t('login.commonUser')), value: 'common' },
+              { label: transformI18n($t('login.adminUser')), value: 'admin' }
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+    </Motion>
+
     <Motion>
       <el-form-item
         :rules="[
@@ -108,7 +166,7 @@ function onBack() {
       </el-form-item>
     </Motion>
 
-    <Motion :delay="150">
+    <!-- <Motion :delay="150">
       <el-form-item prop="verifyCode">
         <div class="w-full flex justify-between">
           <el-input
@@ -130,7 +188,7 @@ function onBack() {
           </el-button>
         </div>
       </el-form-item>
-    </Motion>
+    </Motion> -->
 
     <Motion :delay="200">
       <el-form-item prop="password">

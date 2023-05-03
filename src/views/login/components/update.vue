@@ -11,10 +11,15 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Lock from "@iconify-icons/ri/lock-fill";
 import Iphone from "@iconify-icons/ep/iphone";
+import User from "@iconify-icons/ri/user-3-fill";
+import { http } from "@/utils/http";
+import { UserResult } from "@/api/user";
+import { baseUrlApi } from "@/api/utils";
 
 const { t } = useI18n();
 const loading = ref(false);
 const ruleForm = reactive({
+  username: "",
   phone: "",
   verifyCode: "",
   password: "",
@@ -37,18 +42,37 @@ const repeatPasswordRule = [
   }
 ];
 
+const updateRequest = (data?: object) => {
+  return http.request<UserResult>("post", baseUrlApi("updatepwd"), { data });
+};
+
 const onUpdate = async (formEl: FormInstance | undefined) => {
   loading.value = true;
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      // 模拟请求，需根据实际开发进行修改
-      setTimeout(() => {
-        message(transformI18n($t("login.passwordUpdateReg")), {
-          type: "success"
-        });
-        loading.value = false;
-      }, 2000);
+      updateRequest({
+        username: ruleForm.username,
+        password: ruleForm.password,
+        phone: ruleForm.phone
+      }).then(res => {
+        if (res.success) {
+          message(transformI18n($t("login.passwordUpdateReg")), {
+            type: "success"
+          });
+          loading.value = false;
+
+          setTimeout(() => {
+            onBack();
+          }, 1000);
+        } else {
+          message("修改密码失败", {
+            type: "error"
+          });
+          loading.value = false;
+          return fields;
+        }
+      });
     } else {
       loading.value = false;
       return fields;
@@ -70,6 +94,26 @@ function onBack() {
     size="large"
   >
     <Motion>
+      <el-form-item
+        :rules="[
+          {
+            required: true,
+            message: transformI18n($t('login.usernameReg')),
+            trigger: 'blur'
+          }
+        ]"
+        prop="username"
+      >
+        <el-input
+          clearable
+          v-model="ruleForm.username"
+          :placeholder="t('login.username')"
+          :prefix-icon="useRenderIcon(User)"
+        />
+      </el-form-item>
+    </Motion>
+
+    <Motion>
       <el-form-item prop="phone">
         <el-input
           clearable
@@ -80,7 +124,7 @@ function onBack() {
       </el-form-item>
     </Motion>
 
-    <Motion :delay="100">
+    <!-- <Motion :delay="100">
       <el-form-item prop="verifyCode">
         <div class="w-full flex justify-between">
           <el-input
@@ -102,7 +146,7 @@ function onBack() {
           </el-button>
         </div>
       </el-form-item>
-    </Motion>
+    </Motion> -->
 
     <Motion :delay="150">
       <el-form-item prop="password">

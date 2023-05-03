@@ -7,7 +7,9 @@ export default {
   meta: {
     icon: "edit",
     title: $t("menus.hseditor"),
-    rank: editor
+    rank: editor,
+    roles: ["admin"]
+    // showLink: false
   },
   children: [
     {
@@ -16,7 +18,8 @@ export default {
       component: () => import("@/views/editor/index.vue"),
       meta: {
         title: $t("menus.hseditor"),
-        keepAlive: true
+        keepAlive: true,
+        roles: ["admin"]
       }
     }
   ]

@@ -8,7 +8,7 @@ export default [
     response: ({ body }) => {
       if (body.username === "admin") {
         return {
-          success: true,
+          success: false,
           data: {
             username: "admin",
             // 一个用户可能有多个角色

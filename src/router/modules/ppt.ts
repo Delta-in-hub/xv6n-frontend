@@ -7,7 +7,8 @@ export default {
   meta: {
     icon: "ppt",
     title: "PPT",
-    rank: ppt
+    rank: ppt,
+    showLink: false
   },
   children: [
     {
