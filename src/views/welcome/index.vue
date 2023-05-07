@@ -6,10 +6,13 @@ import Bar from "./components/Bar.vue";
 import Pie from "./components/Pie.vue";
 import Line from "./components/Line.vue";
 import TypeIt from "@/components/ReTypeit";
-import { ref, computed, markRaw } from "vue";
+import { ref, computed, markRaw, reactive } from "vue";
 import Github from "./components/Github.vue";
 import { randomColor } from "@pureadmin/utils";
 import { useRenderFlicker } from "@/components/ReFlicker";
+import { baseUrlApi } from "@/api/utils";
+import { message } from "@/utils/message";
+import PureTable from "@pureadmin/table";
 
 defineOptions({
   name: "Welcome"
@@ -25,21 +28,114 @@ setTimeout(() => {
   loading.value = !loading.value;
 }, 800);
 
-axios
-  .get("https://api.github.com/repos/pure-admin/vue-pure-admin/releases")
-  .then(res => {
-    list.value = res.data.map(v => {
-      return {
-        content: v.body,
-        timestamp: dayjs(v.published_at).format("YYYY/MM/DD hh:mm:ss A"),
-        icon: markRaw(
-          useRenderFlicker({
-            background: randomColor({ type: "hex" }) as string
-          })
-        )
-      };
-    });
+axios.get(baseUrlApi("get/example_release.json")).then(res => {
+  list.value = res.data.map(v => {
+    return {
+      content: v.body,
+      timestamp: dayjs(v.published_at).format("YYYY/MM/DD hh:mm:ss A"),
+      icon: markRaw(
+        useRenderFlicker({
+          background: randomColor({ type: "hex" }) as string
+        })
+      )
+    };
   });
+});
+
+const tableRowClassName = ({ rowIndex }: { rowIndex: number }) => {
+  if (rowIndex % 4 === 1) {
+    return "pure-warning-row";
+  } else if (rowIndex % 4 === 3) {
+    return "pure-success-row";
+  }
+  return "";
+};
+
+const columns: TableColumnList = [
+  {
+    label: "实验项目",
+    prop: "lab"
+  },
+  {
+    label: "姓名",
+    prop: "name"
+  },
+  {
+    label: "成绩",
+    prop: "score"
+  }
+];
+
+const puretable = ref();
+
+const tableData = reactive([
+  {
+    lab: "lab1-1",
+    score: 90,
+    name: "Tom"
+  },
+  {
+    lab: "lab2-1",
+    score: 100,
+    name: "Jack"
+  }
+]);
+
+const uname: string = JSON.parse(sessionStorage.getItem("user-info"))[
+  "username"
+];
+
+type Score = {
+  username: string;
+  course: string;
+  score: number;
+};
+
+const getScoreList = () => {
+  let urll = "getAllScores";
+  if (uname.indexOf("admin") != -1) {
+    urll = "getAllStudentsScores";
+  } else {
+    urll = urll + "/" + uname;
+  }
+  axios
+    .get(baseUrlApi(urll))
+    .then(res => {
+      console.log(res.data);
+      tableData.splice(0, tableData.length);
+      if (res.status != 200) {
+        message("获取成绩失败", { type: "error" });
+        return;
+      }
+      if (urll === "getAllStudentsScores") {
+        res.data.forEach((user: any) => {
+          user.scores.forEach((item: Score) => {
+            tableData.push({
+              lab: item.course,
+              name: item.username,
+              score: item.score
+            });
+          });
+        });
+      } else {
+        res.data.scores.forEach((item: Score) => {
+          tableData.push({
+            lab: item.course,
+            name: item.username,
+            score: item.score
+          });
+        });
+        console.log(tableData);
+      }
+      // console.log(puretable.value.getTableRef());
+      // puretable.value.getTableRef().data = tableData;
+    })
+    .catch((err: any) => {
+      console.log(err);
+    });
+};
+
+getScoreList();
 </script>
 
 <template>
@@ -65,7 +161,7 @@ axios
           }
         }"
       >
-        <el-card shadow="never" style="height: 347px">
+        <el-card shadow="never" style="height: 100%">
           <template #header>
             <a
               :class="titleClass"
@@ -74,7 +170,7 @@ axios
             >
               <TypeIt
                 :className="'type-it2'"
-                :values="['PureAdmin 版本日志']"
+                :values="['OSLAB 系统公告']"
                 :cursor="false"
                 :speed="80"
               />
@@ -120,7 +216,7 @@ axios
           }
         }"
       >
-        <el-card shadow="never" style="height: 347px">
+        <el-card shadow="never" style="height: 100%">
           <template #header>
             <a
               :class="titleClass"
@@ -129,7 +225,7 @@ axios
             >
               <TypeIt
                 :className="'type-it1'"
-                :values="['GitHub信息']"
+                :values="['用户信息']"
                 :cursor="false"
                 :speed="120"
               />
@@ -143,7 +239,32 @@ axios
         </el-card>
       </el-col>
 
-      <el-col
+      <el-col>
+        <el-card shadow="never" style="width: 100%; height: 100%">
+          <template #header>
+            <a
+              :class="titleClass"
+              href="https://github.com/xiaoxian521"
+              target="_black"
+            >
+              <TypeIt
+                :className="'type-it3'"
+                :values="['成绩信息']"
+                :cursor="false"
+                :speed="120"
+              />
+            </a>
+            <pure-table
+              ref="puretable"
+              :data="tableData"
+              :columns="columns"
+              :row-class-name="tableRowClassName"
+            />
+          </template>
+        </el-card>
+      </el-col>
+
+      <!-- <el-col
         :xs="24"
         :sm="24"
         :md="12"
@@ -162,8 +283,8 @@ axios
             delay: 400
           }
         }"
-      >
-        <el-card shadow="never">
+      > -->
+      <!-- <el-card shadow="never">
           <template #header>
             <a
               :class="titleClass"
@@ -183,10 +304,10 @@ axios
               <Line />
             </template>
           </el-skeleton>
-        </el-card>
-      </el-col>
+        </el-card> -->
+      <!-- </el-col> -->
 
-      <el-col
+      <!-- <el-col
         :xs="24"
         :sm="24"
         :md="12"
@@ -205,8 +326,8 @@ axios
             delay: 400
           }
         }"
-      >
-        <el-card shadow="never">
+      > -->
+      <!-- <el-card shadow="never">
           <template #header>
             <a
               :class="titleClass"
@@ -226,10 +347,10 @@ axios
               <Pie />
             </template>
           </el-skeleton>
-        </el-card>
-      </el-col>
+        </el-card> -->
+      <!-- </el-col> -->
 
-      <el-col
+      <!-- <el-col
         :xs="24"
         :sm="24"
         :md="24"
@@ -248,8 +369,8 @@ axios
             delay: 400
           }
         }"
-      >
-        <el-card shadow="never">
+      > -->
+      <!-- <el-card shadow="never">
           <template #header>
             <a
               :class="titleClass"
@@ -269,8 +390,8 @@ axios
               <Bar />
             </template>
           </el-skeleton>
-        </el-card>
-      </el-col>
+        </el-card> -->
+      <!-- </el-col> -->
     </el-row>
   </div>
 </template>
@@ -282,5 +403,16 @@ axios
 
 .main-content {
   margin: 20px 20px 0 20px !important;
+}
+</style>
+
+<style>
+/* 此处样式会在全局都生效，上面 tableRowClassName 函数返回的值也就是类名必须在全局中唯一，避免样式突出 */
+.pure-warning-row {
+  --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+
+.pure-success-row {
+  --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
 </style>
