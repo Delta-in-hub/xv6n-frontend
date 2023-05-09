@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import dayjs from "dayjs";
 import axios from "axios";
 
 import TypeIt from "@/components/ReTypeit";
@@ -10,7 +9,7 @@ import { message } from "@/utils/message";
 
 defineOptions({
   // name 作为一种规范最好必须写上并且和路由的name保持一致
-  name: "Fighting"
+  name: "LAB2"
 });
 
 const titleClass = computed(() => {

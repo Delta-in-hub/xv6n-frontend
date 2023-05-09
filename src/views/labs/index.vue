@@ -1,21 +1,49 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 defineOptions({
   // name 作为一种规范最好必须写上并且和路由的name保持一致
   name: "Fighting"
 });
+
+const router = useRouter();
+
+function jumptolab1() {
+  router.push("/labs/lab1");
+}
+function jumptolab2() {
+  router.push("/labs/lab2");
+}
+function jumptolab3() {
+  router.push("/labs/lab3");
+}
+function jumptolab4() {
+  router.push("/labs/lab4");
+}
+function jumptolab5() {
+  router.push("/labs/lab5");
+}
+function jumptolab6() {
+  router.push("/labs/lab6");
+}
+function jumptolab7() {
+  router.push("/labs/lab7");
+}
+function jumptolab8() {
+  router.push("/labs/lab8");
+}
 </script>
 
 <template>
   <div style="text-align: center">
-    <div class="btn golang">LAB 1</div>
-    <div class="btn golang">LAB 2</div>
-    <div class="btn golang">LAB 3</div>
-    <div class="btn golang">LAB 4</div>
-    <div class="btn golang">LAB 5</div>
-    <div class="btn golang">LAB 6</div>
-    <div class="btn golang">LAB 7</div>
-    <div class="btn golang">LAB 8</div>
+    <div class="btn golang" @click="jumptolab1">LAB 1</div>
+    <div class="btn golang" @click="jumptolab2">LAB 2</div>
+    <div class="btn golang" @click="jumptolab3">LAB 3</div>
+    <div class="btn golang" @click="jumptolab4">LAB 4</div>
+    <div class="btn golang" @click="jumptolab5">LAB 5</div>
+    <div class="btn golang" @click="jumptolab6">LAB 6</div>
+    <div class="btn golang" @click="jumptolab7">LAB 7</div>
+    <div class="btn golang" @click="jumptolab8">LAB 8</div>
   </div>
 </template>
 
