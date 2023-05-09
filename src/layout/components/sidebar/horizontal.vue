@@ -68,9 +68,9 @@ watch(
       <!-- 菜单搜索 -->
       <Search />
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <!-- <Notice id="header-notice" /> -->
       <!-- 国际化 -->
-      <el-dropdown id="header-translation" trigger="click">
+      <!-- <el-dropdown id="header-translation" trigger="click">
         <globalization
           class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
         />
@@ -98,7 +98,7 @@ watch(
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-      </el-dropdown>
+      </el-dropdown> -->
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover">
