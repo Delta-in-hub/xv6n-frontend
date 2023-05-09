@@ -48,11 +48,7 @@ const childColumns: TableColumnList = [
   <div>
     switch parent border: <el-switch v-model="parentBorder" /> switch child
     border: <el-switch v-model="childBorder" />
-    <pure-table
-      :data="tableDataExpand"
-      :columns="columns"
-      :border="parentBorder"
-    >
+    <pure-table :data="tableDataExpand" :columns="columns" :border="true">
       <template #expand="{ row }">
         <div class="m-4">
           <p class="mb-2">State: {{ row.state }}</p>
@@ -63,7 +59,7 @@ const childColumns: TableColumnList = [
           <pure-table
             :data="row.family"
             :columns="childColumns"
-            :border="childBorder"
+            :border="true"
           />
         </div>
       </template>

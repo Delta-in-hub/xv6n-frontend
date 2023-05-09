@@ -239,7 +239,7 @@ getScoreList();
         </el-card>
       </el-col>
 
-      <el-col>
+      <!-- <el-col>
         <el-card shadow="never" style="width: 100%; height: 100%">
           <template #header>
             <a
@@ -262,136 +262,35 @@ getScoreList();
             />
           </template>
         </el-card>
-      </el-col>
-
-      <!-- <el-col
-        :xs="24"
-        :sm="24"
-        :md="12"
-        :lg="8"
-        :xl="8"
-        class="mb-[18px]"
-        v-motion
-        :initial="{
-          opacity: 0,
-          y: 100
-        }"
-        :enter="{
-          opacity: 1,
-          y: 0,
-          transition: {
-            delay: 400
-          }
-        }"
-      > -->
-      <!-- <el-card shadow="never">
+      </el-col> -->
+      <el-col>
+        <el-card shadow="never" style="width: 100%; height: 100%">
           <template #header>
             <a
               :class="titleClass"
-              href="https://github.com/pure-admin/vue-pure-admin"
-              target="_black"
-            >
-              <TypeIt
-                :className="'type-it4'"
-                :values="['GitHub折线图信息']"
-                :cursor="false"
-                :speed="120"
-              />
-            </a>
-          </template>
-          <el-skeleton animated :rows="7" :loading="loading">
-            <template #default>
-              <Line />
-            </template>
-          </el-skeleton>
-        </el-card> -->
-      <!-- </el-col> -->
-
-      <!-- <el-col
-        :xs="24"
-        :sm="24"
-        :md="12"
-        :lg="8"
-        :xl="8"
-        class="mb-[18px]"
-        v-motion
-        :initial="{
-          opacity: 0,
-          y: 100
-        }"
-        :enter="{
-          opacity: 1,
-          y: 0,
-          transition: {
-            delay: 400
-          }
-        }"
-      > -->
-      <!-- <el-card shadow="never">
-          <template #header>
-            <a
-              :class="titleClass"
-              href="https://github.com/pure-admin/vue-pure-admin"
+              href="https://github.com/xiaoxian521"
               target="_black"
             >
               <TypeIt
                 :className="'type-it3'"
-                :values="['GitHub饼图信息']"
+                :values="['实验项目']"
                 :cursor="false"
                 :speed="120"
               />
             </a>
           </template>
-          <el-skeleton animated :rows="7" :loading="loading">
-            <template #default>
-              <Pie />
-            </template>
-          </el-skeleton>
-        </el-card> -->
-      <!-- </el-col> -->
-
-      <!-- <el-col
-        :xs="24"
-        :sm="24"
-        :md="24"
-        :lg="8"
-        :xl="8"
-        class="mb-[18px]"
-        v-motion
-        :initial="{
-          opacity: 0,
-          y: 100
-        }"
-        :enter="{
-          opacity: 1,
-          y: 0,
-          transition: {
-            delay: 400
-          }
-        }"
-      > -->
-      <!-- <el-card shadow="never">
-          <template #header>
-            <a
-              :class="titleClass"
-              href="https://github.com/pure-admin/vue-pure-admin"
-              target="_black"
-            >
-              <TypeIt
-                :className="'type-it5'"
-                :values="['GitHub柱状图信息']"
-                :cursor="false"
-                :speed="120"
-              />
-            </a>
-          </template>
-          <el-skeleton animated :rows="7" :loading="loading">
-            <template #default>
-              <Bar />
-            </template>
-          </el-skeleton>
-        </el-card> -->
-      <!-- </el-col> -->
+          <div style="text-align: center">
+            <div class="btn golang">LAB 1</div>
+            <div class="btn golang">LAB 2</div>
+            <div class="btn golang">LAB 3</div>
+            <div class="btn golang">LAB 4</div>
+            <div class="btn golang">LAB 5</div>
+            <div class="btn golang">LAB 6</div>
+            <div class="btn golang">LAB 7</div>
+            <div class="btn golang">LAB 8</div>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -414,5 +313,58 @@ getScoreList();
 
 .pure-success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+
+.btn {
+  vertical-align: top;
+  margin: 15px;
+  display: inline-block;
+  text-align: center;
+  width: 122px;
+  height: 44px;
+  line-height: 44px;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.golang {
+  vertical-align: top;
+  height: 42px;
+  line-height: 42px;
+  width: 120px;
+  color: #2194e0;
+  border: 1px solid #2194e0;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.golang:before {
+  content: "";
+  background-color: rgba(255, 255, 255, 0.5);
+  height: 100%;
+  width: 3em;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -4.5em;
+  transform: skewX(-45deg) translateX(0);
+  transition: none;
+}
+
+.golang:hover {
+  background-color: #2194e0;
+  color: #fff;
+}
+
+.golang:hover:before {
+  transform: skewX(-45deg) translateX(260px);
+  transition: all 0.5s ease-in-out;
+}
+
+.golang:active {
+  opacity: 0.8;
 }
 </style>
